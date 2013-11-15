@@ -1,0 +1,37 @@
+RewriteEngine On
+RewriteBase /
+
+# deny access to certain files and directories
+<Files "settings.php">
+    order allow,deny
+    deny from all
+</Files>
+
+# error pages
+ErrorDocument 401 notfound/
+ErrorDocument 403 notfound/
+ErrorDocument 404 notfound/
+ErrorDocument 500 notfound/
+
+# don't allow further rules from preventing access to robots.txt
+RewriteRule ^robots.txt$ - [L]
+
+# forward index pages
+RewriteCond %{THE_REQUEST} ^.*\/index\.(html|php)?
+RewriteRule ^(.*)index\.(html|php)?$ http://%{HTTP_HOST}/$1 [L,R=301]
+
+# removes trailing backslashes
+RewriteRule ^(.+)/$ http://%{HTTP_HOST}/$1 [L,R=301]
+
+# send root page requests to Router
+RewriteRule ^$ framework/index.php?path=$1 [L]
+
+# allow direct access to assets, resources, installer, and tests
+RewriteCond %{REQUEST_URI} !assets/(.*) [NC]
+RewriteCond %{REQUEST_URI} !resources/(.*) [NC]
+RewriteCond %{REQUEST_URI} !framework/install.php [NC] # NOTE: comment out for production
+RewriteCond %{REQUEST_URI} !framework/tests.php [NC] # NOTE: comment out for production
+
+# send page requests to Router
+RewriteCond %{REQUEST_URI} !index\.php [NC]
+RewriteRule ^([^/]+)(.*)?$ framework/index.php?path=$1$2
