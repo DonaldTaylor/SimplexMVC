@@ -4,9 +4,9 @@
 	
 	// routes
 	$settings['routes'] = array(
-    'index' => 'RootController',
-    '404' => 'NotFoundController'
-  );
+	  'index' => 'RootController',
+	  '404' => 'NotFoundController'
+	);
 	
 	// environment
 	$settings['timeZone'] = 'America/Chicago';
